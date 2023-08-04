@@ -1,4 +1,7 @@
 
+using WebApi.Models;
+using WebApi.Repository;
+
 namespace WebApi
 {
     public class Program
@@ -9,7 +12,7 @@ namespace WebApi
 
             // Add services to the container.
             builder.Services.AddAuthorization();
-
+            builder.Services.AddScoped<PersonaRepository>(); // Agrega esto a tu método Main
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -26,25 +29,14 @@ namespace WebApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+           
 
-            var summaries = new[]
+            app.MapPost("/Persona", (Persona persona, PersonaRepository repo) =>  // Aquí está el cambio
             {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
+                repo.Insertar(persona);
+                return Results.Ok("Persona insertada con éxito!");
             })
-            .WithName("GetWeatherForecast")
+            .WithName("Insertar")
             .WithOpenApi();
 
             app.Run();
