@@ -3,7 +3,8 @@
     public class Persona
     {
         public string _idPersona { get; set; }
-        public string _nombresona { get; set; }
+        public string _dni { get; set; }
+        public string _nombre { get; set; }
         public string _apellidos { get; set; }
         public string _genero { get; set; }
         public string _foto { get; set; }
